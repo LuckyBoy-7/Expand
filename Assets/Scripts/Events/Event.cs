@@ -172,4 +172,30 @@ namespace Events
             }
         }
     }
+
+    public class EarthquakeEvent : DebuffEvent
+    {
+        public EarthquakeEvent()
+        {
+            name = "Earthquake";
+            description = "Destroy every area";
+            eventType = EventType.Area;
+            color = Color.black;
+            duration = 0;
+            radius = 250;
+        }
+
+        public override void Do(EventItem item)
+        {
+            affectedBuildings = GetBuildingsInRadius(item.debuffCircle.transform.position, radius);
+            foreach (var b in affectedBuildings)
+            {
+                b.Destroyed();
+            }
+        }
+
+        public override void Undo(EventItem item)
+        {
+        }
+    }
 }

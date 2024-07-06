@@ -91,4 +91,13 @@ public class BuildingsManager : Singleton<BuildingsManager>
         }
     }
 
+    public void CheckGameState()
+    {
+        if (buildings.Count == 0)
+        {
+            Time.timeScale = 0;
+            print("Gameover");
+        }
+    }
+
 }

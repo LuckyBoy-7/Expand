@@ -152,6 +152,7 @@ public class Building : InteractableUI
             BreakLineAndConnection(connectedBuilding);
 
         Destroy(buildingUIController.ghostLine.gameObject);
+        BuildingsManager.instance.CheckGameState();
     }
 
     public void BreakLineAndConnection(Building building)

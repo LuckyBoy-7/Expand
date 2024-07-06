@@ -126,4 +126,9 @@ public class Building : InteractableUI
         building.connectedBuildings.Add(this);
         buildingUIController.ConnectWith(building);
     }
+
+    public void Destroyed()
+    {
+        Destroy(gameObject);
+    }
 }

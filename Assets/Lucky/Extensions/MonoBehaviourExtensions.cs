@@ -26,7 +26,7 @@ namespace Lucky.Extensions
                     elapse += isScaledTime ? Time.deltaTime : Time.unscaledDeltaTime;
                     if (elapse >= interval())
                     {
-                        elapse -= interval();
+                        elapse = 0;
                         callback();
                         if (isOneShot)
                             yield break;
@@ -69,6 +69,5 @@ namespace Lucky.Extensions
                 callback?.Invoke();
             }
         }
-
     }
 }

@@ -25,6 +25,18 @@ namespace Buildings
         private void Update()
         {
             transform.position += (targetPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
+            if (targetBuilding == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            // 对应洪水造成最大人数减员，多出来的兵直接在路上死亡
+            if (targetBuilding.possibleSoldiers > targetBuilding.maxSoldiers)
+            {
+                Destroy(gameObject);
+                targetBuilding.ComingSoldiers -= 1;
+            }
         }
 
         private void OnTriggerEnter2D(Collider2D other)

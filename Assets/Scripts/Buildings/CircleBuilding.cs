@@ -7,15 +7,17 @@ namespace Buildings
         public float produceDuration = 1f;
         public float produceElapse = 0;
         public float produceRate = 1;
-        
-        private void Update()
+
+        protected override void Update()
         {
+            base.Update();
             // 没兵就不造
             if (CurrentSoldiers == 0 || CurrentSoldiers == maxSoldiers)
             {
                 produceElapse = 0;
                 return;
             }
+
             produceElapse += Time.deltaTime;
             if (produceElapse > produceDuration)
             {

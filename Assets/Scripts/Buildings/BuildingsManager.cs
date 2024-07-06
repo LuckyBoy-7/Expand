@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Lucky.Managers;
 using UnityEngine;
 
@@ -5,6 +6,9 @@ public class BuildingsManager : Singleton<BuildingsManager>
 {
     public Building selectedBuilding;
     public Transform soldierContainer;
+    public List<Building> buildings = new();
+
+    public void Register(Building building) => buildings.Add(building);
 
     public void OnBuildingSelected(Building building)
     {

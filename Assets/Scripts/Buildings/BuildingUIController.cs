@@ -1,5 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Lucky.Collections;
+using Lucky.Interactive;
 using Lucky.Managers;
 using TMPro;
 using UnityEngine;
@@ -9,6 +12,25 @@ public class BuildingUIController : MonoBehaviour
 {
     public TMP_Text text;
     public Image outline;
+    public LineRenderer ghostLine;
+    private bool hasStartGhostLine;
+    public DefaultDict<Building, LineRenderer> buildingToLine = new(() => null);
+
+
+    private void Start()
+    {
+        ghostLine = LineManager.instance.CreateLine();
+        ghostLine.enabled = false;
+    }
+
+    private void Update()
+    {
+        if (hasStartGhostLine)
+        {
+            ghostLine.SetPosition(0, transform.position);
+            ghostLine.SetPosition(1, GameCursor.MouseWorldPos);
+        }
+    }
 
     public void UpdateUI(int curSoldiers, int maxSoldiers)
     {
@@ -23,5 +45,25 @@ public class BuildingUIController : MonoBehaviour
     public void Deselect()
     {
         outline.enabled = false;
+    }
+
+    public void StartGhostLine()
+    {
+        ghostLine.enabled = true;
+        hasStartGhostLine = true;
+    }
+
+    public void EndGhostLine()
+    {
+        ghostLine.enabled = false;
+        hasStartGhostLine = false;
+    }
+
+    public void ConnectWith(Building building)
+    {
+        var line = LineManager.instance.CreateLine();
+        buildingToLine[building] = line;
+        line.SetPosition(0, transform.position);
+        line.SetPosition(1, building.transform.position);
     }
 }

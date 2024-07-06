@@ -13,7 +13,7 @@ namespace Buildings
         {
             base.Update();
             // 没兵就不造
-            if (CurrentSoldiers == 0 || CurrentSoldiers == maxSoldiers)
+            if (CurrentSoldiers == 0 || CurrentSoldiers == MaxSoldiers)
             {
                 produceElapse = 0;
                 return;
@@ -25,7 +25,7 @@ namespace Buildings
                 produceElapse -= produceDuration;
 
                 // todo: 矛盾，如果兵正在路上，那么粮田是否应该造兵
-                CurrentSoldiers += Mathf.Min(maxSoldiers - possibleSoldiers, (int)(CurrentSoldiers * produceRate));
+                CurrentSoldiers += Mathf.Min(MaxSoldiers - possibleSoldiers, (int)(CurrentSoldiers * produceRate));
             }
         }
     }

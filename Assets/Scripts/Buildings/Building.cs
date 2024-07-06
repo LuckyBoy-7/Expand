@@ -7,7 +7,18 @@ using UnityEngine;
 public class Building : InteractableUI
 {
     public List<Building> connectedBuildings = new();
-    public int maxSoldiers = 20;
+    public int _maxSoldiers = 20;
+
+    public int MaxSoldiers
+    {
+        get => _maxSoldiers;
+        set
+        {
+            _maxSoldiers = value;
+            buildingUIController.UpdateUI(CurrentSoldiers, MaxSoldiers);
+        }
+    }
+
     public int _currentSoldiers;
     public float soldierMoveSpeed => 100 * (1 - soldierMoveReduceRate);
     public float soldierMoveReduceRate = 0;
@@ -18,7 +29,7 @@ public class Building : InteractableUI
         set
         {
             _currentSoldiers = value;
-            buildingUIController.UpdateUI(_currentSoldiers, maxSoldiers);
+            buildingUIController.UpdateUI(_currentSoldiers, MaxSoldiers);
         }
     }
 
@@ -32,7 +43,7 @@ public class Building : InteractableUI
         set
         {
             _comingSoldiers = value;
-            buildingUIController.UpdateUI(CurrentSoldiers, maxSoldiers);
+            buildingUIController.UpdateUI(CurrentSoldiers, MaxSoldiers);
         }
     }
 
@@ -45,7 +56,7 @@ public class Building : InteractableUI
     {
         base.Awake();
         buildingUIController = GetComponent<BuildingUIController>();
-        buildingUIController.UpdateUI(CurrentSoldiers, maxSoldiers);
+        buildingUIController.UpdateUI(CurrentSoldiers, MaxSoldiers);
 
         soldierPrefab = Resources.Load<Soldier>("Prefabs/Soldier");
     }
@@ -57,6 +68,12 @@ public class Building : InteractableUI
 
     protected virtual void Update()
     {
+        if (MaxSoldiers == 0)
+        {
+            Destroyed();
+            return;
+        }
+
         TryBalance();
     }
 
@@ -84,9 +101,9 @@ public class Building : InteractableUI
         // 当前能送过去的个数，对方能容纳的个数
         int soldiers;
         if (number == -1)
-            soldiers = Mathf.Min((int)(CurrentSoldiers * transferRate), toBuilding.maxSoldiers - toBuilding.possibleSoldiers);
+            soldiers = Mathf.Min((int)(CurrentSoldiers * transferRate), toBuilding.MaxSoldiers - toBuilding.possibleSoldiers);
         else
-            soldiers = Mathf.Min(number, CurrentSoldiers, toBuilding.maxSoldiers - toBuilding.possibleSoldiers);
+            soldiers = Mathf.Min(number, CurrentSoldiers, toBuilding.MaxSoldiers - toBuilding.possibleSoldiers);
         toBuilding.ComingSoldiers += soldiers;
         CurrentSoldiers -= soldiers;
         for (int i = 0; i < soldiers; i++)

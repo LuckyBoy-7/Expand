@@ -22,7 +22,7 @@ namespace Events
         public Building targetBuilding;
         public CanvasGroup canvasGroup;
         private bool hasStart;
-        private Image debuffCircle;
+        public Image debuffCircle;
 
         private void Awake()
         {
@@ -45,10 +45,10 @@ namespace Events
                 }
 
                 var pivotPos = BuildingsManager.instance.buildings.Choice().transform.position;
-                var pos = pivotPos + (Vector3)Random.insideUnitCircle * 200;
+                var pos = pivotPos + (Vector3)Random.insideUnitCircle * 140;
                 var prefab = Resources.Load<Image>("Prefabs/Circle");
                 debuffCircle = Instantiate(prefab, EventManager.instance.debuffAreaContainer);
-                debuffCircle.transform.localScale = Vector3.one * eve.radius;
+                debuffCircle.transform.localScale = Vector3.one * eve.radius * 2;
                 debuffCircle.transform.position = pos;
                 debuffCircle.color = eve.color.WithA(0.2f);
 
@@ -84,6 +84,8 @@ namespace Events
                     enemy.InitPos(targetBuilding.transform.position);
                     enemy.targetBuilding = targetBuilding;
                 }
+
+                EventManager.instance.buildingsWithEvent.Remove(targetBuilding);
             }
             else if (eve is DebuffEvent)
             {

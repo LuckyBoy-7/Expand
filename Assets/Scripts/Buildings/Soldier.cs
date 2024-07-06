@@ -36,7 +36,7 @@ namespace Buildings
             }
 
             // 对应洪水造成最大人数减员，多出来的兵直接在路上死亡
-            if (targetBuilding.possibleSoldiers > targetBuilding.maxSoldiers)
+            if (targetBuilding.possibleSoldiers > targetBuilding.MaxSoldiers)
             {
                 Destroy(gameObject);
                 targetBuilding.ComingSoldiers -= 1;

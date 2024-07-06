@@ -33,6 +33,7 @@ namespace Events
 
     public abstract class DebuffEvent : Event
     {
+        protected List<Building> affectedBuildings = new();
         public float duration;
 
         public abstract void Do(EventItem item);
@@ -48,7 +49,7 @@ namespace Events
             name = "WeakBandit";
             description = "Bandits appear to attack this area";
             eventType = EventType.Dot;
-            color = Color.blue;
+            color = Color.gray;
             enemyNumber = Random.Range(5, 9);
         }
     }
@@ -74,67 +75,100 @@ namespace Events
             eventType = EventType.Area;
             color = Color.yellow;
             duration = 10;
-            radius = 400;
-            
+            radius = 200;
         }
 
         public override void Do(EventItem item)
         {
-            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            affectedBuildings = GetBuildingsInRadius(item.debuffCircle.transform.position, radius);
+            foreach (var b in affectedBuildings)
             {
                 if (b is CircleBuilding building)
                 {
                     building.reduceRate += 0.2f;
-                    building.soldierMoveReduceRate += (1 - building.soldierMoveReduceRate) * 0.5f;
                 }
+
+                b.soldierMoveReduceRate += (1 - b.soldierMoveReduceRate) * 0.5f;
             }
         }
 
         public override void Undo(EventItem item)
         {
-            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            foreach (var b in affectedBuildings)
             {
+                if (b)
+                    continue;
                 if (b is CircleBuilding building)
                 {
                     building.reduceRate -= 0.2f;
-                    building.soldierMoveReduceRate -= 1 - building.soldierMoveReduceRate;
                 }
+
+                b.soldierMoveReduceRate -= 1 - b.soldierMoveReduceRate;
             }
         }
     }
-    
-    public class StormFlood : DebuffEvent
+
+    public class StormEvent : DebuffEvent
     {
-        public StormFlood()
+        public StormEvent()
         {
             name = "Storm";
             description = "Every area Affected by the storm reduces transfer speed by half";
             eventType = EventType.Area;
             color = Color.cyan;
             duration = 10;
-            radius = 700;
-            
+            radius = 350;
         }
 
         public override void Do(EventItem item)
         {
-            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            affectedBuildings = GetBuildingsInRadius(item.debuffCircle.transform.position, radius);
+            foreach (var b in affectedBuildings)
             {
-                if (b is CircleBuilding building)
-                {
-                    building.soldierMoveReduceRate += (1 - building.soldierMoveReduceRate) * 0.5f;
-                }
+                b.soldierMoveReduceRate += (1 - b.soldierMoveReduceRate) * 0.5f;
             }
         }
 
         public override void Undo(EventItem item)
         {
-            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            foreach (var b in affectedBuildings)
             {
-                if (b is CircleBuilding building)
-                {
-                    building.soldierMoveReduceRate -= 1 - building.soldierMoveReduceRate;
-                }
+                if (b)
+                    continue;
+                b.soldierMoveReduceRate -= 1 - b.soldierMoveReduceRate;
+            }
+        }
+    }
+
+    public class FloodEvent : DebuffEvent
+    {
+        public FloodEvent()
+        {
+            name = "Flood";
+            description = "Every area Affected by the flood reduces half max storage";
+            eventType = EventType.Area;
+            color = Color.blue;
+            duration = 10;
+            radius = 250;
+        }
+
+        public override void Do(EventItem item)
+        {
+            affectedBuildings = GetBuildingsInRadius(item.debuffCircle.transform.position, radius);
+            foreach (var b in affectedBuildings)
+            {
+                b.MaxSoldiers /= 2;
+                b.CurrentSoldiers = Mathf.Min(b.CurrentSoldiers, b.MaxSoldiers);
+            }
+        }
+
+        public override void Undo(EventItem item)
+        {
+            foreach (var b in affectedBuildings)
+            {
+                if (b)
+                    continue;
+                b.MaxSoldiers *= 2;
             }
         }
     }

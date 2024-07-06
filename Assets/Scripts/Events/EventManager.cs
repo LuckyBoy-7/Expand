@@ -26,7 +26,6 @@ namespace Events
         private void Start()
         {
             // float earthquakeEventDuration;
-            float floodEventDuration = 1;
 
 
             // float weakBanditEventDuration = 90;
@@ -81,17 +80,28 @@ namespace Events
             //
             //     EventHint.instance.TryShowHint(data);
             // }, () => droughtEventDuration);
-            
-            float stormDuration = 1;
+
+            // float stormDuration = 1;
+            // this.CreateFuncTimer(() =>
+            // {
+            //     Event data = new StormEvent();
+            //     var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+            //     eventItem.eve = data;
+            //     eventItem.eventStartTimer = 1;
+            //
+            //     EventHint.instance.TryShowHint(data);
+            // }, () => stormDuration);
+
+            float floodEventDuration = 1;
             this.CreateFuncTimer(() =>
             {
-                Event data = new StormFlood();
+                Event data = new FloodEvent();
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
                 eventItem.eve = data;
                 eventItem.eventStartTimer = 1;
 
                 EventHint.instance.TryShowHint(data);
-            }, () => stormDuration);
+            }, () => floodEventDuration);
         }
 
         private bool ChoiceValidBuilding(out Building building, HashSet<Type> types)

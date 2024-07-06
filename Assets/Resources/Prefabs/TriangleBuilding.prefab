@@ -25,8 +25,8 @@ RectTransform:
   m_GameObject: {fileID: 898528377880510485}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.36, y: 1.36, z: 1.36}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 898528377924860113}
   - {fileID: 898528379056767539}
@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 50.66}
+  m_AnchoredPosition: {x: 0, y: 69.09}
   m_SizeDelta: {x: 256, y: 256}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &898528377924860112
@@ -73,7 +73,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 6.9}
   m_SizeDelta: {x: 256, y: 256}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &898528377924860115
@@ -182,8 +182,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0/20
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa516330305814947a60c1d26c5df1f2, type: 2}
-  m_sharedMaterial: {fileID: 983620609553808189, guid: aa516330305814947a60c1d26c5df1f2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -403,10 +403,11 @@ MonoBehaviour:
   collider: {fileID: 0}
   canInteract: 1
   rectTransform: {fileID: 0}
-  sortingLayer: 0
+  sortingLayer: 3
   connectedBuildings: []
   maxSoldiers: 20
   _currentSoldiers: 0
+  soldierMoveReduceRate: 0
   transferRate: 0.5
   buildingUIController: {fileID: 0}
 --- !u!114 &898528379753430640
@@ -449,6 +450,6 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -131.09282, y: -128.13087}
-      - {x: -1.003837, y: 93.09078}
-      - {x: 129.86427, y: -127.012856}
+    - - {x: -193.36316, y: -118.731544}
+      - {x: 1.346017, y: 242.30447}
+      - {x: 192.13461, y: -112.91391}

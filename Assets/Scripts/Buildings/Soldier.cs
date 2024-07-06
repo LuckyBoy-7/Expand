@@ -9,6 +9,7 @@ namespace Buildings
         public float moveSpeed = 100;
         public float targetPosRandomRadius = 5;
         public Building targetBuilding;
+        public Building fromBuilding;
         private Vector3 targetPos;
 
 
@@ -25,6 +26,8 @@ namespace Buildings
 
         private void Update()
         {
+            if (fromBuilding)
+                moveSpeed = fromBuilding.soldierMoveSpeed;
             transform.position += (targetPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
             if (targetBuilding == null)
             {

@@ -10,6 +10,8 @@ namespace Lucky.Interactive
         public RectTransform rectTransform;
 
         public long sortingLayer = 0;
+        
+        // warning: 这个不要忘了调，尤其是涉及到很多interactable的时候
         public override long SortingOrder => sortingLayer * 10000 + rectTransform.GetSiblingIndex();
 
         protected override void Awake()

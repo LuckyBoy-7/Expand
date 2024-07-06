@@ -93,6 +93,8 @@ namespace Events
                 {
                     e.Undo(this);
                     Destroy(gameObject);
+                    if (debuffCircle)
+                        Destroy(debuffCircle.gameObject);
                 }, () => e.duration, isOneShot: true);
             }
         }

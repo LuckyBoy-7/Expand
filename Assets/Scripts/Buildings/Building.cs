@@ -9,6 +9,8 @@ public class Building : InteractableUI
     public List<Building> connectedBuildings = new();
     public int maxSoldiers = 20;
     public int _currentSoldiers;
+    public float soldierMoveSpeed => 100 * (1 - soldierMoveReduceRate);
+    public float soldierMoveReduceRate = 0;
 
     public int CurrentSoldiers
     {
@@ -92,6 +94,8 @@ public class Building : InteractableUI
             var soldier = Instantiate(soldierPrefab, BuildingsManager.instance.soldierContainer);
             soldier.InitPos(transform.position, 5);
             soldier.targetBuilding = toBuilding;
+            soldier.fromBuilding = this;
+            soldier.moveSpeed = soldierMoveSpeed;
         }
     }
 

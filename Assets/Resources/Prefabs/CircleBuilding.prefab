@@ -72,15 +72,16 @@ MonoBehaviour:
   collider: {fileID: 0}
   canInteract: 1
   rectTransform: {fileID: 0}
-  sortingLayer: 0
+  sortingLayer: 3
   connectedBuildings: []
   maxSoldiers: 20
   _currentSoldiers: 2
+  soldierMoveReduceRate: 0
   transferRate: 0.5
-  buildingUIController: {fileID: 0}
+  buildingUIController: {fileID: 99539572040369214}
   produceDuration: 1
   produceElapse: 0
-  produceRate: 1
+  reduceRate: 0
 --- !u!50 &99539572040369212
 Rigidbody2D:
   serializedVersion: 4
@@ -117,7 +118,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 125
+  m_Radius: 142
 --- !u!1 &99539572300118137
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,8 +301,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0/20
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: aa516330305814947a60c1d26c5df1f2, type: 2}
-  m_sharedMaterial: {fileID: 983620609553808189, guid: aa516330305814947a60c1d26c5df1f2, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

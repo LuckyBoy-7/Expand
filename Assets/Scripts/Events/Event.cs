@@ -70,11 +70,12 @@ namespace Events
         public DroughtEvent()
         {
             name = "Drought";
-            description = "Every area Affected by the drought reduces transfer speed by half，And Castle reduce 20% produce rate";
+            description = "Every area Affected by the drought reduces transfer speed by half，And Castle reduces 20% produce rate";
             eventType = EventType.Area;
             color = Color.yellow;
             duration = 10;
             radius = 400;
+            
         }
 
         public override void Do(EventItem item)
@@ -84,6 +85,7 @@ namespace Events
                 if (b is CircleBuilding building)
                 {
                     building.reduceRate += 0.2f;
+                    building.soldierMoveReduceRate += (1 - building.soldierMoveReduceRate) * 0.5f;
                 }
             }
         }
@@ -95,6 +97,43 @@ namespace Events
                 if (b is CircleBuilding building)
                 {
                     building.reduceRate -= 0.2f;
+                    building.soldierMoveReduceRate -= 1 - building.soldierMoveReduceRate;
+                }
+            }
+        }
+    }
+    
+    public class StormFlood : DebuffEvent
+    {
+        public StormFlood()
+        {
+            name = "Storm";
+            description = "Every area Affected by the storm reduces transfer speed by half";
+            eventType = EventType.Area;
+            color = Color.cyan;
+            duration = 10;
+            radius = 700;
+            
+        }
+
+        public override void Do(EventItem item)
+        {
+            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            {
+                if (b is CircleBuilding building)
+                {
+                    building.soldierMoveReduceRate += (1 - building.soldierMoveReduceRate) * 0.5f;
+                }
+            }
+        }
+
+        public override void Undo(EventItem item)
+        {
+            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            {
+                if (b is CircleBuilding building)
+                {
+                    building.soldierMoveReduceRate -= 1 - building.soldierMoveReduceRate;
                 }
             }
         }

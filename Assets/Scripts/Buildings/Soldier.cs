@@ -14,7 +14,8 @@ namespace Buildings
 
         private void Start()
         {
-            targetPos = targetBuilding.transform.position + (Vector3)Random.insideUnitCircle * targetPosRandomRadius;
+            if (targetBuilding)
+                targetPos = targetBuilding.transform.position + (Vector3)Random.insideUnitCircle * targetPosRandomRadius;
         }
 
         public void InitPos(Vector3 pos, float radius)

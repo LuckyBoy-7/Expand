@@ -49,13 +49,15 @@ public class BuildingUIController : MonoBehaviour
 
     public void StartGhostLine()
     {
-        ghostLine.enabled = true;
+        if (ghostLine)
+            ghostLine.enabled = true;
         hasStartGhostLine = true;
     }
 
     public void EndGhostLine()
     {
-        ghostLine.enabled = false;
+        if (ghostLine)
+            ghostLine.enabled = false;
         hasStartGhostLine = false;
     }
 

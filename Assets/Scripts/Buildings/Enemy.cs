@@ -11,8 +11,9 @@ namespace Buildings
         public Building targetBuilding;
         private float speed = 100;
         public CanvasGroup canvasGroup;
+        private bool isKilling;
 
-        private void Start()
+        private void OnEnable()
         {
             canvasGroup.alpha = 0;
             canvasGroup.DOFade(1, fadeOutDuration);
@@ -52,7 +53,16 @@ namespace Buildings
 
         private void Kill()
         {
-            canvasGroup.DOFade(0, fadeOutDuration).onComplete += () => Destroy(gameObject);
+            if (isKilling)
+                return;
+            isKilling = true;
+            canvasGroup.DOFade(0, fadeOutDuration).onComplete += () =>
+            {
+                EnemiesManager.instance.enemyPool.Release(this);
+                isKilling = false;
+                canvasGroup.alpha = 1;
+                gameObject.SetActive(false);
+            };
         }
     }
 }

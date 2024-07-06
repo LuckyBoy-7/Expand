@@ -74,17 +74,7 @@ namespace Auxiliary
             clipLine.enabled = false;
             foreach (var (b1, b2) in buildingToBuilding)
             {
-                b1.connectedBuildings.Remove(b2);
-                b2.connectedBuildings.Remove(b1);
-                LineRenderer line = null;
-                line = b1.buildingUIController.buildingToLine[b2];
-                b1.buildingUIController.buildingToLine[b2] = null;
-                if (line)
-                    Destroy(line.gameObject);
-                line = b2.buildingUIController.buildingToLine[b1];
-                b2.buildingUIController.buildingToLine[b1] = null;
-                if (line)
-                    Destroy(line.gameObject);
+                b1.BreakLineAndConnection(b2);
             }
         }
 

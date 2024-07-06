@@ -68,6 +68,7 @@ public class BuildingsManager : Singleton<BuildingsManager>
     }
 
     public void Register(Building building) => buildings.Add(building);
+    public void UnRegister(Building building) => buildings.Remove(building);
 
     public void OnBuildingSelected(Building building)
     {

@@ -6,6 +6,7 @@ using Lucky.Extensions;
 using Lucky.Managers;
 using Mono.Cecil;
 using UnityEngine;
+using UnityEngine.Pool;
 
 namespace Events
 {
@@ -14,7 +15,6 @@ namespace Events
         public HashSet<Building> buildingsWithEvent = new();
         private EventItem eventItemPrefab;
         public Transform eventItemContainer;
-        public Transform enemiesContainer;
 
         protected override void Awake()
         {
@@ -24,11 +24,33 @@ namespace Events
 
         private void Start()
         {
-            float weakBanditEventDuration = 1;
-            // float strongBanditEventDuration;
             // float droughtEventDuration;
             // float floodEventDuration;
             // float earthquakeEventDuration;
+            
+            
+            // float weakBanditEventDuration = 90;
+            // this.CreateFuncTimer(() =>
+            // {
+            //     if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
+            //         {
+            //             typeof(CircleBuilding),
+            //             typeof(TriangleBuilding)
+            //         }))
+            //         return;
+            //     buildingsWithEvent.Add(building);
+            //
+            //     Event data = new WeakBanditEvent();
+            //     var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+            //     eventItem.targetBuilding = building;
+            //     eventItem.eventData = data;
+            //     eventItem.eventStartTimer = 90;
+            //
+            //     EventHint.instance.TryShowHint(data);
+            //
+            // }, () => weakBanditEventDuration);
+            
+            float strongBanditEventDuration = 1;
             this.CreateFuncTimer(() =>
             {
                 if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
@@ -39,16 +61,15 @@ namespace Events
                     return;
                 buildingsWithEvent.Add(building);
 
-                Event data = new WeakBanditEvent();
+                Event data = new StrongBanditEvent();
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
                 eventItem.targetBuilding = building;
                 eventItem.eventData = data;
-                eventItem.eventStartTimer = weakBanditEventDuration;
+                eventItem.eventStartTimer = 1;
 
                 EventHint.instance.TryShowHint(data);
 
-                weakBanditEventDuration = 10000;
-            }, () => weakBanditEventDuration);
+            }, () => strongBanditEventDuration);
         }
 
         private bool ChoiceValidBuilding(out Building building, HashSet<Type> types)

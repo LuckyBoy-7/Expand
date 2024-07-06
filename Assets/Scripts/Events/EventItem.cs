@@ -19,13 +19,11 @@ namespace Events
 
         public Building targetBuilding;
         public CanvasGroup canvasGroup;
-        private Enemy enemyPrefab;
         private bool hasStart;
 
         private void Awake()
         {
             canvasGroup = GetComponent<CanvasGroup>();
-            enemyPrefab = Resources.Load<Enemy>("Prefabs/Enemy");
         }
 
         private void Start()
@@ -55,7 +53,8 @@ namespace Events
                 AttackEvent data = eventData as AttackEvent;
                 for (int i = 0; i < data.enemyNumber; i++)
                 {
-                    var enemy = Instantiate(enemyPrefab, EventManager.instance.enemiesContainer);
+                    var enemy = EnemiesManager.instance.enemyPool.Get();
+                    enemy.gameObject.SetActive(true);
                     enemy.InitPos(targetBuilding.transform.position);
                     enemy.targetBuilding = targetBuilding;
                 }

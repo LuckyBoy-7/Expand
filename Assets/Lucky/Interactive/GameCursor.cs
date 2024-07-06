@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.Serialization;
 
 
-namespace Lucky.Interactive 
+namespace Lucky.Interactive
 {
     /// <summary>
     /// 注意先把相机大小放大100倍
@@ -77,7 +77,8 @@ namespace Lucky.Interactive
                 IsLongPressShake = false;
                 if (RealtimeSinceMouseButtonDown <= clickTimeThreshold)
                     MouseButtonDownInteractable?.CursorClick();
-                MouseButtonDownInteractable?.CursorRelease();
+                if (MouseButtonDownInteractable != null)
+                    MouseButtonDownInteractable.CursorRelease();
 
                 if (MouseButtonDownInteractable != null && MouseButtonDownInteractable.IsPositionInBounds(MouseWorldPos))
                     MouseButtonDownInteractable?.CursorReleaseInBounds();

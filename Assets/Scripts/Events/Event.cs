@@ -37,15 +37,15 @@ namespace Events
         }
     }
 
-    // public class StrongBanditEvent : AttackEvent
-    // {
-    //     public StrongBanditEvent()
-    //     {
-    //         name = "StrongBandit";
-    //         description = "Strong Bandits appear to attack this area";
-    //         enemyNumber = Random.Range(5, 9) * Random.Range(2, 5);
-    //     }
-    // }
+    public class StrongBanditEvent : AttackEvent
+    {
+        public StrongBanditEvent()
+        {
+            name = "StrongBandit";
+            description = "Strong Bandits appear to attack this area";
+            enemyNumber = Random.Range(5, 9) * Random.Range(2, 5);
+        }
+    }
     //
     // public class DroughtEvent : AttackEvent
     // {

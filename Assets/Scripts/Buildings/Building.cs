@@ -1,18 +1,14 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Buildings;
 using Lucky.Interactive;
-using Lucky.Managers;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Building : InteractableUI
 {
     public List<Building> connectedBuildings = new();
     public int maxSoldiers = 20;
-    public int _currentSoldiers = 0;
+    public int _currentSoldiers;
 
     public int CurrentSoldiers
     {
@@ -130,5 +126,26 @@ public class Building : InteractableUI
     public void Destroyed()
     {
         Destroy(gameObject);
+        BuildingsManager.instance.UnRegister(this);
+        foreach (var connectedBuilding in connectedBuildings.ToList())
+            BreakLineAndConnection(connectedBuilding);
+
+        Destroy(buildingUIController.ghostLine.gameObject);
+    }
+
+    public void BreakLineAndConnection(Building building)
+    {
+        building.connectedBuildings.Remove(this);
+        connectedBuildings.Remove(building);
+
+        LineRenderer line = null;
+        line = building.buildingUIController.buildingToLine[this];
+        building.buildingUIController.buildingToLine[this] = null;
+        if (line)
+            Destroy(line.gameObject);
+        line = buildingUIController.buildingToLine[building];
+        buildingUIController.buildingToLine[building] = null;
+        if (line)
+            Destroy(line.gameObject);
     }
 }

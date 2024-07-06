@@ -15,10 +15,10 @@ namespace Lucky.Interactive
         protected override void Awake()
         {
             base.Awake();
-            ResetCollider();
+            // ResetCollider();
             // 省事，不然每个都要手动调，由于很多时候ui的更新晚一点，所以这个最后改
             // 或者也可以就写个方法，然后子类调用就行
-            this.DoWaitUntilEndOfFrame(ResetCollider);
+            // this.DoWaitUntilEndOfFrame(ResetCollider);
 
             if (rectTransform == null)
                 rectTransform = GetComponent<RectTransform>();

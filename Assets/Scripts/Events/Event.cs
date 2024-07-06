@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Linq;
+using Buildings;
 using UnityEngine;
 
 namespace Events
@@ -6,6 +9,21 @@ namespace Events
     {
         public string name;
         public string description;
+
+        public enum EventType
+        {
+            Dot,
+            Area
+        }
+
+        public EventType eventType;
+        public float radius;
+        public Color color;
+
+        protected List<Building> GetBuildingsInRadius(Vector3 pos, float radius)
+        {
+            return BuildingsManager.instance.buildings.Where(b => (b.transform.position - pos).magnitude < radius).ToList();
+        }
     }
 
     public class AttackEvent : Event
@@ -13,17 +31,13 @@ namespace Events
         public int enemyNumber;
     }
 
-    public class DebuffEvent : Event
+    public abstract class DebuffEvent : Event
     {
         public float duration;
 
-        public virtual void Do()
-        {
-        }
+        public abstract void Do(EventItem item);
 
-        public virtual void Undo()
-        {
-        }
+        public abstract void Undo(EventItem item);
     }
 
 
@@ -33,6 +47,8 @@ namespace Events
         {
             name = "WeakBandit";
             description = "Bandits appear to attack this area";
+            eventType = EventType.Dot;
+            color = Color.blue;
             enemyNumber = Random.Range(5, 9);
         }
     }
@@ -43,17 +59,44 @@ namespace Events
         {
             name = "StrongBandit";
             description = "Strong Bandits appear to attack this area";
+            eventType = EventType.Dot;
+            color = Color.green;
             enemyNumber = Random.Range(5, 9) * Random.Range(2, 5);
         }
     }
-    //
-    // public class DroughtEvent : AttackEvent
-    // {
-    //     public DroughtEvent()
-    //     {
-    //         name = "Drought";
-    //         description = "Every area Affected by the drought reduces transfer speed by half，And Castle reduce 20% produce rate";
-    //         enemyNumber = Random.Range(5, 9) * Random.Range(2, 5);
-    //     }
-    // }
+
+    public class DroughtEvent : DebuffEvent
+    {
+        public DroughtEvent()
+        {
+            name = "Drought";
+            description = "Every area Affected by the drought reduces transfer speed by half，And Castle reduce 20% produce rate";
+            eventType = EventType.Area;
+            color = Color.yellow;
+            duration = 10;
+            radius = 400;
+        }
+
+        public override void Do(EventItem item)
+        {
+            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            {
+                if (b is CircleBuilding building)
+                {
+                    building.reduceRate += 0.2f;
+                }
+            }
+        }
+
+        public override void Undo(EventItem item)
+        {
+            foreach (var b in GetBuildingsInRadius(item.transform.position, radius))
+            {
+                if (b is CircleBuilding building)
+                {
+                    building.reduceRate -= 0.2f;
+                }
+            }
+        }
+    }
 }

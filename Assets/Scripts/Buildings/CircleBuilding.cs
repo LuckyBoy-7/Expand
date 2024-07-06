@@ -6,7 +6,8 @@ namespace Buildings
     {
         public float produceDuration = 1f;
         public float produceElapse = 0;
-        public float produceRate = 1;
+        public float produceRate => 1 * Mathf.Max(0, 1 - reduceRate);
+        public float reduceRate = 0;
 
         protected override void Update()
         {

@@ -15,6 +15,7 @@ namespace Events
         public HashSet<Building> buildingsWithEvent = new();
         private EventItem eventItemPrefab;
         public Transform eventItemContainer;
+        public Transform debuffAreaContainer;
 
         protected override void Awake()
         {
@@ -24,11 +25,10 @@ namespace Events
 
         private void Start()
         {
-            // float droughtEventDuration;
             // float floodEventDuration;
             // float earthquakeEventDuration;
-            
-            
+
+
             // float weakBanditEventDuration = 90;
             // this.CreateFuncTimer(() =>
             // {
@@ -43,33 +43,44 @@ namespace Events
             //     Event data = new WeakBanditEvent();
             //     var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
             //     eventItem.targetBuilding = building;
-            //     eventItem.eventData = data;
+            //     eventItem.eve = data;
             //     eventItem.eventStartTimer = 90;
             //
             //     EventHint.instance.TryShowHint(data);
             //
             // }, () => weakBanditEventDuration);
-            
-            float strongBanditEventDuration = 1;
+            //
+            // float strongBanditEventDuration = 1;
+            // this.CreateFuncTimer(() =>
+            // {
+            //     if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
+            //         {
+            //             typeof(CircleBuilding),
+            //             typeof(TriangleBuilding)
+            //         }))
+            //         return;
+            //     buildingsWithEvent.Add(building);
+            //
+            //     Event data = new StrongBanditEvent();
+            //     var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+            //     eventItem.targetBuilding = building;
+            //     eventItem.eve = data;
+            //     eventItem.eventStartTimer = 1;
+            //
+            //     EventHint.instance.TryShowHint(data);
+            //
+            // }, () => strongBanditEventDuration);
+
+            float droughtEventDuration = 1;
             this.CreateFuncTimer(() =>
             {
-                if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
-                    {
-                        typeof(CircleBuilding),
-                        typeof(TriangleBuilding)
-                    }))
-                    return;
-                buildingsWithEvent.Add(building);
-
-                Event data = new StrongBanditEvent();
+                Event data = new DroughtEvent();
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
-                eventItem.targetBuilding = building;
-                eventItem.eventData = data;
+                eventItem.eve = data;
                 eventItem.eventStartTimer = 1;
 
                 EventHint.instance.TryShowHint(data);
-
-            }, () => strongBanditEventDuration);
+            }, () => droughtEventDuration);
         }
 
         private bool ChoiceValidBuilding(out Building building, HashSet<Type> types)

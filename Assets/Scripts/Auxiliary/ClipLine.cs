@@ -37,6 +37,7 @@ namespace Auxiliary
                 return;
             clipLine.SetPosition(1, GameCursor.MouseWorldPos);
             var buildings = BuildingsManager.instance.buildings;
+            buildingToBuilding.Clear();
             foreach (var b1 in buildings)
             {
                 foreach (var b2 in b1.connectedBuildings)

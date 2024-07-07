@@ -93,7 +93,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1526577267840764376
 RectTransform:
   m_ObjectHideFlags: 0
@@ -264,12 +264,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   warningFillingImage: {fileID: 7434328016884339328}
+  innerImage: {fileID: 8979550258075200941}
   icon: {fileID: 2017279279415094733}
   text: {fileID: 311600248600237213}
   eventStartTimer: 0
   eventStartTimerElapse: 0
   targetBuilding: {fileID: 0}
   canvasGroup: {fileID: 5884224835448842914}
+  debuffCircle: {fileID: 0}
 --- !u!225 &5884224835448842914
 CanvasGroup:
   m_ObjectHideFlags: 0

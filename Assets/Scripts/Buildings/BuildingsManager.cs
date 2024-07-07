@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Buildings;
+using DG.Tweening;
 using Lucky.Extensions;
 using Lucky.Managers;
-using Lucky.Utilities;
 using UnityEngine;
+using Ease = Lucky.Utilities.Ease;
 using Random = UnityEngine.Random;
 
 public class BuildingsManager : Singleton<BuildingsManager>
@@ -49,6 +50,8 @@ public class BuildingsManager : Singleton<BuildingsManager>
 
     private void SpawnOneBuildingRandomly()
     {
+        if (buildings.Count == 0)
+            return;
         float rate = Ease.SineEaseOut(Mathf.Clamp(buildings.Count / 50f, 0, 1));
         float radius = minBuildingDist + rate * maxBuildingDist;
 
@@ -95,9 +98,18 @@ public class BuildingsManager : Singleton<BuildingsManager>
     {
         if (buildings.Count == 0)
         {
-            Time.timeScale = 0;
+            float duration = 1f;
+            EventManager.instance.Broadcast("Gameover", duration);
             print("Gameover");
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            buildings.Clear();
+            CheckGameState();
+        }
+    }
 }

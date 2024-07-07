@@ -12,6 +12,7 @@ namespace Events
     public class EventItem : MonoBehaviour
     {
         public Image warningFillingImage;
+        public Image innerImage;
         public Image icon;
         public TMP_Text text;
 
@@ -31,6 +32,8 @@ namespace Events
 
         private void Start()
         {
+            warningFillingImage.color = eve.color;
+            innerImage.color = eve.color.WithA(0.4f);
             if (eve.eventType == Event.EventType.Dot)
             {
                 Vector3 offset = new Vector3(-60, 40);
@@ -58,6 +61,8 @@ namespace Events
 
         private void Update()
         {
+            if (eve.eventType == Event.EventType.Dot && targetBuilding == null)
+                Destroy(gameObject);
             if (hasStart)
                 return;
             eventStartTimerElapse += Time.deltaTime;

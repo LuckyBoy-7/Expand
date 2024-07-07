@@ -71,7 +71,7 @@ namespace Events
         public DroughtEvent()
         {
             name = "Drought";
-            description = "Every area Affected by the drought reduces transfer speed by half，And Castle reduces 20% produce rate";
+            description = "Every area Affected by the drought reduces transfer speed by half. And Castle reduces 20% produce rate";
             eventType = EventType.Area;
             color = Color.yellow;
             duration = 10;

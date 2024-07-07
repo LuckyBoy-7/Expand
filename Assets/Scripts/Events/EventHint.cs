@@ -38,11 +38,5 @@ namespace Events
                 Destroy(gameObject);
             };
         }
-
-
-        public void MoveTo(Vector3 pos, float duration)
-        {
-            GetComponent<RectTransform>().DOAnchorPos(pos, duration);
-        }
     }
 }

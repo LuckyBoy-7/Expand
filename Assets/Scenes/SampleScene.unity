@@ -152,11 +152,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f3c29a12ff5ae0c468890e57258915e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soldierMoveSpeedMultiplier: 50
+  produceSpeedMultiplier: 2
   buildingContainer: {fileID: 2081743891}
   soldierContainer: {fileID: 75035061}
   buildings: []
   buildingsToSpawn: []
-  spawnBuildingDuration: 1
+  spawnBuildingDuration: 30
   minBuildingDist: 300
   maxBuildingDist: 1000
 --- !u!4 &46104932

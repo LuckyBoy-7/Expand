@@ -88,6 +88,11 @@ namespace Events
                     enemy.gameObject.SetActive(true);
                     enemy.InitPos(targetBuilding.transform.position);
                     enemy.targetBuilding = targetBuilding;
+                    if (eve is WeakBanditEvent)
+                    {
+                        if (Random.value < 0.3f)
+                            EventManager.instance.CallStrongBanditEvent();
+                    }
                 }
 
                 EventManager.instance.buildingsWithEvent.Remove(targetBuilding);

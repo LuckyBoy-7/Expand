@@ -6,8 +6,15 @@ namespace Buildings
     {
         public float produceDuration = 1f;
         public float produceElapse = 0;
-        public float produceRate => 1 * Mathf.Max(0, 1 - reduceRate);
+        public int produceNumber => (int)((0.5f + CurrentSoldiers / 80f) * BuildingsManager.instance.produceSpeedMultiplier * (1 - reduceRate));
         public float reduceRate = 0;
+
+        protected override void Awake()
+        {
+            base.Awake();
+            _soldierMoveSpeed = 2;
+            MaxSoldiers = 40;
+        }
 
         protected override void Update()
         {
@@ -25,7 +32,7 @@ namespace Buildings
                 produceElapse -= produceDuration;
 
                 // todo: 矛盾，如果兵正在路上，那么粮田是否应该造兵
-                CurrentSoldiers += Mathf.Min(MaxSoldiers - possibleSoldiers, (int)(CurrentSoldiers * produceRate));
+                CurrentSoldiers += Mathf.Min(MaxSoldiers - possibleSoldiers, produceNumber);
             }
         }
     }

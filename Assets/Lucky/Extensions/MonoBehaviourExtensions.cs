@@ -14,9 +14,16 @@ namespace Lucky.Extensions
         /// <param name="interval">调用时间间隔</param>
         /// <param name="isScaledTime">是否受时间缩放影响</param>
         /// <param name="isOneShot">是否就执行一次</param>
-        public static void CreateFuncTimer(this MonoBehaviour orig, Action callback, Func<float> interval, bool isScaledTime = true, bool isOneShot = false)
+        public static void CreateFuncTimer(
+            this MonoBehaviour orig,
+            Action callback,
+            Func<float> interval,
+            bool isScaledTime = true,
+            bool isOneShot = false,
+            bool isStartImmediate = false
+        )
         {
-            float elapse = 0;
+            float elapse = isStartImmediate ? interval() : 0;
             orig.StartCoroutine(Tick());
 
             IEnumerator Tick()

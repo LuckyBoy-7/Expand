@@ -68,13 +68,13 @@ namespace Events
 
     public class DroughtEvent : DebuffEvent
     {
-        public DroughtEvent()
+        public DroughtEvent(float duration)
         {
             name = "Drought";
             description = "Every area Affected by the drought reduces transfer speed by half. And Castle reduces 20% produce rate";
             eventType = EventType.Area;
             color = Color.yellow;
-            duration = 10;
+            this.duration = duration;
             radius = 200;
         }
 
@@ -110,13 +110,13 @@ namespace Events
 
     public class StormEvent : DebuffEvent
     {
-        public StormEvent()
+        public StormEvent(float duration)
         {
             name = "Storm";
             description = "Every area Affected by the storm reduces transfer speed by half";
             eventType = EventType.Area;
             color = Color.cyan;
-            duration = 10;
+            this.duration = duration;
             radius = 350;
         }
 
@@ -148,7 +148,7 @@ namespace Events
             description = "Every area Affected by the flood reduces half max storage";
             eventType = EventType.Area;
             color = Color.blue;
-            duration = 10;
+            this.duration = 0;
             radius = 250;
         }
 
@@ -170,6 +170,8 @@ namespace Events
                     continue;
                 b.MaxSoldiers *= 2;
             }
+
+            EventManager.instance.CallFloodEvent(affectedBuildings.Where(b => b).ToList());
         }
     }
 

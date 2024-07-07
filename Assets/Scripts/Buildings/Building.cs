@@ -20,7 +20,8 @@ public class Building : InteractableUI
     }
 
     public int _currentSoldiers;
-    public float soldierMoveSpeed => 100 * (1 - soldierMoveReduceRate);
+    protected float _soldierMoveSpeed = 2;
+    public float soldierMoveSpeed => _soldierMoveSpeed * (1 - soldierMoveReduceRate) * BuildingsManager.instance.soldierMoveSpeedMultiplier;
     public float soldierMoveReduceRate = 0;
 
     public int CurrentSoldiers

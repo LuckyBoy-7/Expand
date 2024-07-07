@@ -6,17 +6,20 @@ using DG.Tweening;
 using Lucky.Extensions;
 using Lucky.Managers;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Ease = Lucky.Utilities.Ease;
 using Random = UnityEngine.Random;
 
 public class BuildingsManager : Singleton<BuildingsManager>
 {
+    public float soldierMoveSpeedMultiplier = 50;
+    public float produceSpeedMultiplier = 2;
     public Transform buildingContainer;
     public Transform soldierContainer;
     private Building selectedBuilding;
     public List<Building> buildings = new();
     public List<Building> buildingsToSpawn = new();
-    public float spawnBuildingDuration = 1f;
+    public float spawnBuildingDuration = 30;
     public float minBuildingDist = 300;
     public float maxBuildingDist = 1000;
 

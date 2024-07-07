@@ -7,6 +7,7 @@ using Lucky.Managers;
 using Mono.Cecil;
 using UnityEngine;
 using UnityEngine.Pool;
+using Random = UnityEngine.Random;
 
 namespace Events
 {
@@ -25,7 +26,7 @@ namespace Events
 
         private void Start()
         {
-            float weakBanditEventDuration = 1;
+            float weakBanditEventDuration = 90;
             this.CreateFuncTimer(() =>
             {
                 if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
@@ -43,71 +44,77 @@ namespace Events
                 eventItem.eventStartTimer = 90;
 
                 EventHintController.instance.TryShowHint(data);
-            }, () => weakBanditEventDuration);
+            }, () => weakBanditEventDuration, isStartImmediate: true);
 
-            float strongBanditEventDuration = 1;
+
+            float droughtEventDuration = 180;
             this.CreateFuncTimer(() =>
             {
-                if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
-                    {
-                        typeof(CircleBuilding),
-                        typeof(TriangleBuilding)
-                    }))
-                    return;
-                buildingsWithEvent.Add(building);
-
-                Event data = new StrongBanditEvent();
-                var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
-                eventItem.targetBuilding = building;
-                eventItem.eve = data;
-                eventItem.eventStartTimer = 1;
-
-                EventHintController.instance.TryShowHint(data);
-            }, () => strongBanditEventDuration);
-
-            float droughtEventDuration = 1;
-            this.CreateFuncTimer(() =>
-            {
-                Event data = new DroughtEvent();
+                Event data = new DroughtEvent(30);
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
                 eventItem.eve = data;
-                eventItem.eventStartTimer = 1;
+                eventItem.eventStartTimer = Random.Range(60, 121);
 
                 EventHintController.instance.TryShowHint(data);
             }, () => droughtEventDuration);
 
-            float stormDuration = 1;
+            float stormDuration = 300;
             this.CreateFuncTimer(() =>
             {
-                Event data = new StormEvent();
+                Event data = new StormEvent(40);
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
                 eventItem.eve = data;
-                eventItem.eventStartTimer = 1;
+                eventItem.eventStartTimer = Random.Range(60, 121);
 
                 EventHintController.instance.TryShowHint(data);
             }, () => stormDuration);
 
-            float floodEventDuration = 1;
-            this.CreateFuncTimer(() =>
-            {
-                Event data = new FloodEvent();
-                var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
-                eventItem.eve = data;
-                eventItem.eventStartTimer = 1;
 
-                EventHintController.instance.TryShowHint(data);
-            }, () => floodEventDuration);
-
-            float earthquakeEventDuration = 1;
+            float earthquakeStartTimer = 40;
+            float earthquakeEventDuration = 60 - earthquakeStartTimer;
             this.CreateFuncTimer(() =>
             {
                 Event data = new EarthquakeEvent();
                 var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
                 eventItem.eve = data;
-                eventItem.eventStartTimer = 1;
+                eventItem.eventStartTimer = earthquakeStartTimer;
 
                 EventHintController.instance.TryShowHint(data);
+                earthquakeEventDuration = 240 - earthquakeStartTimer;
             }, () => earthquakeEventDuration);
+        }
+
+        public void CallStrongBanditEvent()
+        {
+            if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
+                {
+                    typeof(CircleBuilding),
+                    typeof(TriangleBuilding)
+                }))
+                return;
+            buildingsWithEvent.Add(building);
+
+            Event data = new StrongBanditEvent();
+            var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+            eventItem.targetBuilding = building;
+            eventItem.eve = data;
+            eventItem.eventStartTimer = 120;
+
+            EventHintController.instance.TryShowHint(data);
+        }
+
+        public void CallFloodEvent(List<Building> buildings)
+        {
+            foreach (var b in buildings)
+            {
+                Event data = new FloodEvent();
+                var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+                eventItem.targetBuilding = b;
+                eventItem.eve = data;
+                eventItem.eventStartTimer = 10;
+
+                EventHintController.instance.TryShowHint(data);
+            }
         }
 
         private bool ChoiceValidBuilding(out Building building, HashSet<Type> types)

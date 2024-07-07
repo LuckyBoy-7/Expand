@@ -33,7 +33,7 @@ namespace Events
 
     public abstract class DebuffEvent : Event
     {
-        protected List<Building> affectedBuildings = new();
+        public List<Building> affectedBuildings = new();
         public float duration;
 
         public abstract void Do(EventItem item);
@@ -62,7 +62,7 @@ namespace Events
             description = "Strong Bandits appear to attack this area";
             eventType = EventType.Dot;
             color = Color.green;
-            enemyNumber = Random.Range(5, 9) * Random.Range(2, 5);
+            enemyNumber = Random.Range(20, 30);
         }
     }
 
@@ -75,7 +75,7 @@ namespace Events
             eventType = EventType.Area;
             color = Color.yellow;
             this.duration = duration;
-            radius = 200;
+            radius = 1000;
         }
 
         public override void Do(EventItem item)
@@ -96,7 +96,7 @@ namespace Events
         {
             foreach (var b in affectedBuildings)
             {
-                if (b)
+                if (!b)
                     continue;
                 if (b is CircleBuilding building)
                 {
@@ -133,10 +133,12 @@ namespace Events
         {
             foreach (var b in affectedBuildings)
             {
-                if (b)
+                if (!b)
                     continue;
                 b.soldierMoveReduceRate -= 1 - b.soldierMoveReduceRate;
             }
+
+            EventManager.instance.CallFloodEvent(affectedBuildings.Where(b => b).ToList());
         }
     }
 
@@ -145,10 +147,10 @@ namespace Events
         public FloodEvent()
         {
             name = "Flood";
-            description = "Every area Affected by the flood reduces half max storage";
+            description = "Every area affected by the flood reduces half max storage and may cause irreversible effects";
             eventType = EventType.Area;
             color = Color.blue;
-            this.duration = 0;
+            duration = 10;
             radius = 250;
         }
 
@@ -166,12 +168,10 @@ namespace Events
         {
             foreach (var b in affectedBuildings)
             {
-                if (b)
+                if (!b)
                     continue;
                 b.MaxSoldiers *= 2;
             }
-
-            EventManager.instance.CallFloodEvent(affectedBuildings.Where(b => b).ToList());
         }
     }
 

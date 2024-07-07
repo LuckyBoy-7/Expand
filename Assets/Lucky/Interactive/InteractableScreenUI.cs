@@ -13,17 +13,19 @@ namespace Lucky.Interactive
         public override long SortingOrder => sortingLayer * 10000 + rectTransform.GetSiblingIndex();
         protected override Vector2 BoundsCheckPos => GameCursor.MouseScreenPos;
 
-        public override bool PositionInBounds(Vector2 pos)
+        public override bool PositionInBounds(Vector2 pos, RectTransform trans = null)
         {
-            float width = rectTransform.sizeDelta.x * rectTransform.localScale.x;
-            float height = rectTransform.sizeDelta.y * rectTransform.localScale.y;
-            Vector2 pivot = rectTransform.pivot;
-            float x = rectTransform.position.x - pivot.x * width;
-            float y = rectTransform.position.y - pivot.y * height;
-            if (Input.mousePosition.x <= x + width
-                && Input.mousePosition.x >= x
-                && Input.mousePosition.y <= y + height
-                && Input.mousePosition.y >= y)
+            if (trans == null)
+                trans = rectTransform;
+            float width = trans.sizeDelta.x * trans.localScale.x;
+            float height = trans.sizeDelta.y * trans.localScale.y;
+            Vector2 pivot = trans.pivot;
+            float x = trans.position.x - pivot.x * width;
+            float y = trans.position.y - pivot.y * height;
+            if (pos.x <= x + width
+                && pos.x >= x
+                && pos.y <= y + height
+                && pos.y >= y)
                 return true;
             return false;
         }
@@ -50,7 +52,8 @@ namespace Lucky.Interactive
 
         private void OnDisable()
         {
-            GameCursor.Instance.InteractableScreenUIs.Remove(this);
+            if (GameCursor.instance)
+                GameCursor.Instance.InteractableScreenUIs.Remove(this);
         }
     }
 }

@@ -7,6 +7,7 @@ using Lucky.Extensions;
 using Lucky.Managers;
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 using Ease = Lucky.Utilities.Ease;
 using Random = UnityEngine.Random;
@@ -22,7 +23,7 @@ public class BuildingsManager : Singleton<BuildingsManager>
     public List<Building> buildingsToSpawn = new();
     public float spawnBuildingDuration = 30;
     public float minBuildingDist = 300;
-    public float maxBuildingDist = 1000;
+    public float maxBuildingDist => 600 + Mathf.Log(4 * Time.time + 1) / 2;
 
     protected override void Awake()
     {
@@ -100,13 +101,14 @@ public class BuildingsManager : Singleton<BuildingsManager>
         {
             float duration = 1f;
             EventManager.instance.Broadcast("Gameover", duration);
-            print("Gameover");
+            SceneManager.LoadScene("EndScene");
+            Time.timeScale = 1;
         }
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) && Input.GetKey(KeyCode.LeftControl) && Input.GetKey(KeyCode.RightAlt))
         {
             buildings.Clear();
             CheckGameState();

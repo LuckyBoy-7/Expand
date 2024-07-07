@@ -14,7 +14,7 @@ namespace Lucky.Interactive
     /// </summary>
     public class GameCursor : MonoBehaviour
     {
-        private static GameCursor instance;
+        public static GameCursor instance;
 
         // 如果别人急需使用，那就直接去找，不然就在awake里初始化
         public static GameCursor Instance
@@ -38,7 +38,7 @@ namespace Lucky.Interactive
         }
 
         public HashSet<InteractableScreenUI> InteractableScreenUIs = new();
-        public static Vector2 MouseWorldPos => Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        public static Vector2 MouseWorldPos => Camera.main.ScreenToWorldPoint(MouseScreenPos);
         public static Vector2 MouseWorldCellPos => new(Mathf.Floor(MouseWorldPos.x + 0.5f), Mathf.Floor(MouseWorldPos.y + 0.5f));
         public static Vector2 MouseScreenPos => Input.mousePosition;
         private Vector2 PreviousMouseWorldPosition { get; set; }

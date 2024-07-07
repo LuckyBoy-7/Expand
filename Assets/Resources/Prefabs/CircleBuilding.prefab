@@ -74,8 +74,8 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   sortingLayer: 3
   connectedBuildings: []
-  _maxSoldiers: 20
-  _currentSoldiers: 2
+  _maxSoldiers: 35
+  _currentSoldiers: 0
   soldierMoveReduceRate: 0
   transferRate: 0.5
   buildingUIController: {fileID: 99539572040369214}

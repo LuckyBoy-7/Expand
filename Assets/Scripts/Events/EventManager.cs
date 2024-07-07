@@ -17,6 +17,8 @@ namespace Events
         private EventItem eventItemPrefab;
         public Transform eventItemContainer;
         public Transform debuffAreaContainer;
+        public float weakBanditRate = 1.2f;
+        public float strongBanditRate = 1.4f;
 
         protected override void Awake()
         {
@@ -26,24 +28,28 @@ namespace Events
 
         private void Start()
         {
-            float weakBanditEventDuration = 90;
+            float weakBanditEventDuration = 60;
             this.CreateFuncTimer(() =>
             {
-                if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
-                    {
-                        typeof(CircleBuilding),
-                        typeof(TriangleBuilding)
-                    }))
-                    return;
-                buildingsWithEvent.Add(building);
+                int number = (int)((1 + BuildingsManager.instance.buildings.Count / 4) * weakBanditRate);
+                for (int i = 0; i < number; i++)
+                {
+                    if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
+                        {
+                            typeof(CircleBuilding),
+                            typeof(TriangleBuilding)
+                        }))
+                        return;
+                    buildingsWithEvent.Add(building);
 
-                Event data = new WeakBanditEvent();
-                var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
-                eventItem.targetBuilding = building;
-                eventItem.eve = data;
-                eventItem.eventStartTimer = 90;
+                    Event data = new WeakBanditEvent();
+                    var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+                    eventItem.targetBuilding = building;
+                    eventItem.eve = data;
+                    eventItem.eventStartTimer = 60;
 
-                EventHintController.instance.TryShowHint(data);
+                    EventHintController.instance.TryShowHint(data);
+                }
             }, () => weakBanditEventDuration, isStartImmediate: true);
 
 
@@ -71,7 +77,7 @@ namespace Events
 
 
             float earthquakeStartTimer = 40;
-            float earthquakeEventDuration = 60 - earthquakeStartTimer;
+            float earthquakeEventDuration = 600 - earthquakeStartTimer;
             this.CreateFuncTimer(() =>
             {
                 Event data = new EarthquakeEvent();
@@ -86,21 +92,25 @@ namespace Events
 
         public void CallStrongBanditEvent()
         {
-            if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
-                {
-                    typeof(CircleBuilding),
-                    typeof(TriangleBuilding)
-                }))
-                return;
-            buildingsWithEvent.Add(building);
+            int number = (int)((1 + BuildingsManager.instance.buildings.Count / 4) * strongBanditRate);
+            for (int i = 0; i < number; i++)
+            {
+                if (!ChoiceValidBuilding(out Building building, new HashSet<Type>
+                    {
+                        typeof(CircleBuilding),
+                        typeof(TriangleBuilding)
+                    }))
+                    return;
+                buildingsWithEvent.Add(building);
 
-            Event data = new StrongBanditEvent();
-            var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
-            eventItem.targetBuilding = building;
-            eventItem.eve = data;
-            eventItem.eventStartTimer = 120;
+                Event data = new StrongBanditEvent();
+                var eventItem = Instantiate(eventItemPrefab, eventItemContainer);
+                eventItem.targetBuilding = building;
+                eventItem.eve = data;
+                eventItem.eventStartTimer = 120;
 
-            EventHintController.instance.TryShowHint(data);
+                EventHintController.instance.TryShowHint(data);
+            }
         }
 
         public void CallFloodEvent(List<Building> buildings)

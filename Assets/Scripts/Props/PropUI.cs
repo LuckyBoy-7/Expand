@@ -30,30 +30,36 @@ namespace Props
         protected override void OnCursorPress()
         {
             base.OnCursorPress();
-            ghostImage = Instantiate(imagePrefab, transform);
+            ghostImage = Instantiate(imagePrefab, PropController.instance.ghostImageContainer);
             if (propType == PropType.Square)
                 ghostImage.sprite = Resources.Load<Sprite>("Prefabs/SquareBuilding");
+            PropController.instance.isDragging = true;
         }
 
-        private void Update()
+        protected override void Update()
         {
+            base.Update();
             if (ghostImage)
-                ghostImage.transform.position = GameCursor.MouseWorldPos;
+            {
+                ghostImage.rectTransform.anchoredPosition = GameCursor.MouseScreenPos;
+            }
         }
 
         protected override void OnCursorRelease()
         {
             base.OnCursorRelease();
-            if (PositionInBounds(GameCursor.MouseScreenPos))
+            if (PositionInBounds(GameCursor.MouseScreenPos, PropController.instance.panel))
             {
                 Destroy(ghostImage);
             }
             else
             {
+                Destroy(ghostImage);
                 Destroy(gameObject);
                 if (propType == PropType.Square)
                     BuildingsManager.instance.SpawnBuilding(Resources.Load<Building>("Prefabs/SquareBuilding"), GameCursor.MouseWorldPos);
             }
+            PropController.instance.isDragging = false;
         }
     }
 }

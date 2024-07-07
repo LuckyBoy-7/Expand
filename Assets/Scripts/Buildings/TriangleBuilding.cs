@@ -6,7 +6,6 @@ namespace Buildings
         {
             base.Awake();
             _soldierMoveSpeed = 3;
-            MaxSoldiers = 20;
         }
     }
 }

@@ -405,7 +405,7 @@ MonoBehaviour:
   rectTransform: {fileID: 0}
   sortingLayer: 3
   connectedBuildings: []
-  _maxSoldiers: 20
+  _maxSoldiers: 30
   _currentSoldiers: 0
   soldierMoveReduceRate: 0
   transferRate: 0.5

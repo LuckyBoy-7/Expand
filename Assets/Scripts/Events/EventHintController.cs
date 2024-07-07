@@ -23,7 +23,7 @@ namespace Events
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        private void OnEnable()
+        private void Start()
         {
             Lucky.Managers.EventManager.instance.Register("Gameover", OnGameover);
         }

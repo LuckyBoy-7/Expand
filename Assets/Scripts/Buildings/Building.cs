@@ -52,6 +52,8 @@ public class Building : InteractableUI
 
     public BuildingUIController buildingUIController;
     private Soldier soldierPrefab;
+    public float transferDuration = 0.1f;
+    public float transferElapse;
 
     protected override void Awake()
     {
@@ -75,7 +77,12 @@ public class Building : InteractableUI
             return;
         }
 
-        TryBalance();
+        transferElapse += Time.deltaTime;
+        if (transferElapse > transferDuration)
+        {
+            transferElapse -= transferDuration;
+            TryBalance();
+        }
     }
 
     private void TryBalance()

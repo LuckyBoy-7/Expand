@@ -29,7 +29,8 @@ namespace Lucky.Interactive
 
         // 由EnemyManager调用以判断当前鼠标位置是否在敌人范围内
         // 这样在Drag Card的时候就知道要不要显示Selection Box了
-        public virtual bool PositionInBounds(Vector2 pos) => collider.OverlapPoint(pos);
+        public virtual bool PositionInBounds(Vector2 pos, RectTransform trans = null) => collider.OverlapPoint(pos);
+
         // 判断enter和exit bounds所用的位置
         protected virtual Vector2 BoundsCheckPos => GameCursor.MouseWorldPos;
 

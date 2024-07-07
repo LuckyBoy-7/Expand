@@ -43,12 +43,13 @@ namespace Events
             {
                 if (BuildingsManager.instance.buildings.Count == 0)
                 {
+                    EventManager.instance.buildingsWithEvent.Remove(targetBuilding);
                     Destroy(gameObject);
                     return;
                 }
 
                 var pivotPos = BuildingsManager.instance.buildings.Choice().transform.position;
-                var pos = pivotPos + (Vector3)Random.insideUnitCircle * 140;
+                var pos = pivotPos + (Vector3)Random.insideUnitCircle * 60;
                 var prefab = Resources.Load<Image>("Prefabs/Circle");
                 debuffCircle = Instantiate(prefab, EventManager.instance.debuffAreaContainer);
                 debuffCircle.transform.localScale = Vector3.one * eve.radius * 2;
@@ -88,11 +89,12 @@ namespace Events
                     enemy.gameObject.SetActive(true);
                     enemy.InitPos(targetBuilding.transform.position);
                     enemy.targetBuilding = targetBuilding;
-                    if (eve is WeakBanditEvent)
-                    {
-                        if (Random.value < 0.3f)
-                            EventManager.instance.CallStrongBanditEvent();
-                    }
+                }
+
+                if (eve is WeakBanditEvent)
+                {
+                    if (Random.value < 0.3f)
+                        EventManager.instance.CallStrongBanditEvent();
                 }
 
                 EventManager.instance.buildingsWithEvent.Remove(targetBuilding);

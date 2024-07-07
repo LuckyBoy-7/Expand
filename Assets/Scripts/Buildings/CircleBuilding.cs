@@ -13,7 +13,7 @@ namespace Buildings
         {
             base.Awake();
             _soldierMoveSpeed = 2;
-            MaxSoldiers = 40;
+            MaxSoldiers = 35;
         }
 
         protected override void Update()

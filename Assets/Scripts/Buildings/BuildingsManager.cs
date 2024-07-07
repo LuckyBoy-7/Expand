@@ -5,6 +5,7 @@ using Buildings;
 using DG.Tweening;
 using Lucky.Extensions;
 using Lucky.Managers;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Ease = Lucky.Utilities.Ease;
@@ -29,15 +30,6 @@ public class BuildingsManager : Singleton<BuildingsManager>
         buildingsToSpawn = new List<Building>
         {
             Resources.Load<Building>("Prefabs/CircleBuilding"),
-            Resources.Load<Building>("Prefabs/CircleBuilding"),
-            Resources.Load<Building>("Prefabs/CircleBuilding"),
-            Resources.Load<Building>("Prefabs/SquareBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
             Resources.Load<Building>("Prefabs/TriangleBuilding"),
             Resources.Load<Building>("Prefabs/TriangleBuilding"),
             Resources.Load<Building>("Prefabs/TriangleBuilding"),
@@ -71,6 +63,11 @@ public class BuildingsManager : Singleton<BuildingsManager>
 
         Building buildingPrefab = buildingsToSpawn.Choice();
         Instantiate(buildingPrefab, buildingContainer).transform.position = possiblePos;
+    }
+
+    public void SpawnBuilding(Building prefab, Vector3 pos)
+    {
+        Instantiate(prefab, pos, quaternion.identity, buildingContainer);
     }
 
     public void Register(Building building) => buildings.Add(building);

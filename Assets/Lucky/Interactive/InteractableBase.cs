@@ -13,6 +13,8 @@ namespace Lucky.Interactive
         // 这些是可以给外部用的给
         public event Action OnCursorEnterEvent; // 鼠标进入时
         public event Action OnCursorExitEvent; // 鼠标离开时
+        public event Action OnCursorEnterBoundsEvent; // 鼠标进入时
+        public event Action OnCursorExitBoundsEvent; // 鼠标进入时
         public event Action OnCursorPressEvent; // 鼠标按下时
         public event Action OnCursorReleaseEvent; // 鼠标释放时
         public event Action OnCursorClickEvent; // 鼠标点击时
@@ -27,7 +29,9 @@ namespace Lucky.Interactive
 
         // 由EnemyManager调用以判断当前鼠标位置是否在敌人范围内
         // 这样在Drag Card的时候就知道要不要显示Selection Box了
-        public bool IsPositionInBounds(Vector2 pos) => collider.OverlapPoint(pos);
+        public virtual bool PositionInBounds(Vector2 pos) => collider.OverlapPoint(pos);
+        // 判断enter和exit bounds所用的位置
+        protected virtual Vector2 BoundsCheckPos => GameCursor.MouseWorldPos;
 
         protected virtual void Awake()
         {
@@ -35,6 +39,19 @@ namespace Lucky.Interactive
                 collider = GetComponent<Collider2D>();
             if (collider == null)
                 collider = gameObject.AddComponent<BoxCollider2D>();
+        }
+
+        private bool preInBoudns = false;
+
+        protected virtual void Update()
+        {
+            // 这里默认用鼠标位置
+            bool curInBounds = PositionInBounds(BoundsCheckPos);
+            if (curInBounds && !preInBoudns)
+                CursorEnterBounds();
+            else if (!curInBounds && preInBoudns)
+                CursorExitBounds();
+            preInBoudns = curInBounds;
         }
 
         public void CursorEnter()
@@ -52,6 +69,23 @@ namespace Lucky.Interactive
                 print("Exit");
             OnCursorExitEvent?.Invoke();
             OnCursorExit();
+        }
+
+        public void CursorEnterBounds()
+        {
+            if (debug)
+                print("ExitBounds");
+
+            OnCursorEnterBoundsEvent?.Invoke();
+            OnCursorEnterBounds();
+        }
+
+        public void CursorExitBounds()
+        {
+            if (debug)
+                print("Exit");
+            OnCursorExitBoundsEvent?.Invoke();
+            OnCursorExitBounds();
         }
 
         public void CursorPress()
@@ -125,6 +159,14 @@ namespace Lucky.Interactive
         }
 
         protected virtual void OnCursorExit()
+        {
+        }
+
+        protected virtual void OnCursorEnterBounds()
+        {
+        }
+
+        protected virtual void OnCursorExitBounds()
         {
         }
 

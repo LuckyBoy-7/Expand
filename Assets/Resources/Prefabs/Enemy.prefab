@@ -85,7 +85,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1004160080883432945}
-  - component: {fileID: 8390149339510844943}
   - component: {fileID: 418747888789354073}
   - component: {fileID: 2012299369068965554}
   m_Layer: 5
@@ -116,22 +115,6 @@ RectTransform:
   m_AnchoredPosition: {x: 960, y: 540}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!58 &8390149339510844943
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7110090717380839613}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
 --- !u!114 &418747888789354073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -144,10 +127,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ac5676326924669a746419798561b38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeOutDuration: 0.2
-  appearRadius: 0
   targetBuilding: {fileID: 0}
-  speed: 0
   canvasGroup: {fileID: 2012299369068965554}
 --- !u!225 &2012299369068965554
 CanvasGroup:

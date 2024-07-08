@@ -66,6 +66,12 @@ public class Building : InteractableUI
         buildingUIController.UpdateUI(CurrentSoldiers, MaxSoldiers);
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        this.CreateFuncTimer(TryBalance, () => transferDuration);
+    }
+
     protected override void Update()
     {
         base.Update();
@@ -74,8 +80,6 @@ public class Building : InteractableUI
             Destroyed();
             return;
         }
-
-        this.CreateFuncTimer(TryBalance, () => transferDuration);
     }
 
     private void TryBalance()
@@ -109,11 +113,9 @@ public class Building : InteractableUI
         CurrentSoldiers -= soldiers;
         for (int i = 0; i < soldiers; i++)
         {
-            var soldier = Instantiate(Res.soldierPrefab, BuildingsManager.instance.soldierContainer);
-            soldier.InitPos(transform.position, 5);
-            soldier.targetBuilding = toBuilding;
-            soldier.fromBuilding = this;
-            soldier.moveSpeed = SoldierMoveSpeed;
+            var soldier = SoldiersManager.instance.soldierPool.Get();
+            soldier.gameObject.SetActive(true);
+            soldier.Init(transform.position, 5, soldierMoveSpeed, this, toBuilding);
         }
     }
 

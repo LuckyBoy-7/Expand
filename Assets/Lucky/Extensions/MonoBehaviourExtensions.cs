@@ -78,5 +78,8 @@ namespace Lucky.Extensions
         }
 
         public static float Dist(this MonoBehaviour orig, MonoBehaviour other) => (orig.transform.position - other.transform.position).magnitude;
+        public static float Dist(this MonoBehaviour orig, Vector3 pos) => (orig.transform.position - pos).magnitude;
+        public static Vector3 Dir(this MonoBehaviour orig, MonoBehaviour other) => (other.transform.position - orig.transform.position).normalized;
+        public static Vector3 Dir(this MonoBehaviour orig, Vector3 pos) => (pos - orig.transform.position).normalized;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Buildings;
+using Lucky.Extensions;
 using UnityEngine;
 
 namespace Events
@@ -23,7 +24,7 @@ namespace Events
 
         protected List<Building> GetBuildingsInRadius(Vector3 pos, float radius)
         {
-            return BuildingsManager.instance.buildings.Where(b => (b.transform.position - pos).magnitude < radius).ToList();
+            return BuildingsManager.instance.buildings.Where(b => b.Dist(pos) < radius).ToList();
         }
 
         public abstract void Do(EventItem item);

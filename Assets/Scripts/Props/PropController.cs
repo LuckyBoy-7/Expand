@@ -12,9 +12,8 @@ namespace Props
         public static PropController instance;
         public Transform ghostImageContainer;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             instance = this;
         }
 
@@ -23,17 +22,18 @@ namespace Props
         public float popupDuraiton = 0.5f;
         public bool isDragging = false;
         private bool isOut = false;
-        
 
-        private void Start()
+
+        protected override void Start()
         {
-            rectTransform.sizeDelta = rectTransform.sizeDelta.WithX(popupDist);
+            base.Start();
+            RectTransform.sizeDelta = RectTransform.sizeDelta.WithX(popupDist);
         }
 
         protected override void Update()
         {
             base.Update();
-            if (isOut && !isDragging && !PositionInBounds(GameCursor.MouseScreenPos))
+            if (isOut && !isDragging && !IsPositionInBounds(GameCursor.MouseScreenPos))
             {
                 panel.DOAnchorPosX(-popupDist, popupDuraiton);
                 isOut = false;
@@ -55,6 +55,5 @@ namespace Props
             panel.DOAnchorPosX(-popupDist, popupDuraiton);
             isOut = false;
         }
-        
     }
 }

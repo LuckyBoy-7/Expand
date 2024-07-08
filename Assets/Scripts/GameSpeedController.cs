@@ -14,8 +14,4 @@ public class GameSpeedController : MonoBehaviour
         slowButton.onClick.AddListener(() => { Time.timeScale = Mathf.Max(0, Time.timeScale - 1); });
         fastButton.onClick.AddListener(() => { Time.timeScale += 1; });
     }
-
-    private void Update()
-    {
-    }
 }

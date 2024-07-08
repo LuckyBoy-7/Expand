@@ -52,6 +52,8 @@ public class BuildingUIController : MonoBehaviour
         if (ghostLine)
             ghostLine.enabled = true;
         hasStartGhostLine = true;
+        ghostLine.SetPosition(0, transform.position);
+        ghostLine.SetPosition(1, GameCursor.MouseWorldPos);
     }
 
     public void EndGhostLine()
@@ -67,5 +69,18 @@ public class BuildingUIController : MonoBehaviour
         buildingToLine[building] = line;
         line.SetPosition(0, transform.position);
         line.SetPosition(1, building.transform.position);
+    }
+
+    public void BreakLine(Building b1, Building b2)
+    {
+        LineRenderer line = null;
+        line = b1.buildingUIController.buildingToLine[b2];
+        b1.buildingUIController.buildingToLine[b2] = null;
+        if (line)
+            Destroy(line.gameObject);
+        line = b2.buildingUIController.buildingToLine[b1];
+        b2.buildingUIController.buildingToLine[b1] = null;
+        if (line)
+            Destroy(line.gameObject);
     }
 }

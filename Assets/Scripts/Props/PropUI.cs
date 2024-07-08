@@ -1,5 +1,6 @@
 using System;
 using Lucky.Interactive;
+using Lucky.Loader;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,9 +19,8 @@ namespace Props
 
         public PropType propType;
 
-        protected override void Awake()
+        protected void Awake()
         {
-            base.Awake();
             imagePrefab = Resources.Load<Image>("Prefabs/PropImage");
             image = GetComponent<Image>();
             if (propType == PropType.Square)
@@ -48,18 +48,15 @@ namespace Props
         protected override void OnCursorRelease()
         {
             base.OnCursorRelease();
-            if (PositionInBounds(GameCursor.MouseScreenPos, PropController.instance.panel))
+            if (!IsPositionInBounds(GameCursor.MouseScreenPos, PropController.instance.panel))
             {
-                Destroy(ghostImage);
-            }
-            else
-            {
-                Destroy(ghostImage);
                 Destroy(gameObject);
                 if (propType == PropType.Square)
-                    BuildingsManager.instance.SpawnBuilding(Resources.Load<Building>("Prefabs/SquareBuilding"), GameCursor.MouseWorldPos);
+                    BuildingsManager.instance.SpawnBuilding(Res.squareBuildingPrefab, GameCursor.MouseWorldPos);
             }
+
             PropController.instance.isDragging = false;
+            Destroy(ghostImage);
         }
     }
 }

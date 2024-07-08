@@ -62,55 +62,39 @@ namespace Events
 
         private void Update()
         {
-            if (eve.eventType == Event.EventType.Dot && targetBuilding == null)
-                Destroy(gameObject);
             if (hasStart)
                 return;
+            if (eve.eventType == Event.EventType.Dot && targetBuilding == null)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
             eventStartTimerElapse += Time.deltaTime;
             warningFillingImage.fillAmount = eventStartTimerElapse / eventStartTimer;
             if (eventStartTimerElapse > eventStartTimer)
             {
                 hasStart = true;
-                if (debuffCircle)
-                    debuffCircle.color = eve.color.WithA(0.6f);
                 StartEvent();
-                canvasGroup.DOFade(0, 0.2f);
             }
         }
 
         private void StartEvent()
         {
-            if (eve is AttackEvent)
+            canvasGroup.DOFade(0, 0.2f);
+            if (eve.eventType == Event.EventType.Area)
             {
-                AttackEvent e = eve as AttackEvent;
-                for (int i = 0; i < e.enemyNumber; i++)
-                {
-                    var enemy = EnemiesManager.instance.enemyPool.Get();
-                    enemy.gameObject.SetActive(true);
-                    enemy.InitPos(targetBuilding.transform.position);
-                    enemy.targetBuilding = targetBuilding;
-                }
-
-                if (eve is WeakBanditEvent)
-                {
-                    if (Random.value < 0.3f)
-                        EventManager.instance.CallStrongBanditEvent();
-                }
-
-                EventManager.instance.buildingsWithEvent.Remove(targetBuilding);
+                debuffCircle.color = eve.color.WithA(0.6f);
             }
-            else if (eve is DebuffEvent)
+
+            eve.Do(this);
+            this.CreateFuncTimer(() =>
             {
-                DebuffEvent e = eve as DebuffEvent;
-                e.Do(this);
-                this.CreateFuncTimer(() =>
-                {
-                    e.Undo(this);
-                    Destroy(gameObject);
-                    if (debuffCircle)
-                        Destroy(debuffCircle.gameObject);
-                }, () => e.duration, isOneShot: true);
-            }
+                eve.Undo(this);
+                Destroy(gameObject);
+                if (debuffCircle)
+                    Destroy(debuffCircle.gameObject);
+            }, () => eve.duration, isOneShot: true);
         }
     }
 }

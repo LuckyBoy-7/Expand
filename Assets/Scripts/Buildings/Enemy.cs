@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Lucky.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -21,6 +22,8 @@ namespace Buildings
 
         private void Update()
         {
+            if (isKilling)
+                return;
             if (targetBuilding == null)
             {
                 Kill();
@@ -29,6 +32,14 @@ namespace Buildings
 
             Vector3 dir = (targetBuilding.transform.position - transform.position).normalized;
             transform.position += dir * (speed * Time.deltaTime);
+
+            if (this.Dist(targetBuilding) < 40)
+            {
+                Kill();
+                targetBuilding.CurrentSoldiers -= 1;
+                if (targetBuilding.CurrentSoldiers == -1)
+                    targetBuilding.Destroyed();
+            }
         }
 
         public void InitPos(Vector3 position)
@@ -39,17 +50,6 @@ namespace Buildings
             transform.position = position + dir * (outer - inner) + dir.normalized * inner;
         }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            Building building = other.GetComponent<Building>();
-            if (building != null && building == targetBuilding)
-            {
-                Kill();
-                targetBuilding.CurrentSoldiers -= 1;
-                if (targetBuilding.CurrentSoldiers == -1)
-                    targetBuilding.Destroyed();
-            }
-        }
 
         private void Kill()
         {

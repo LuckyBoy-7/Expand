@@ -1,4 +1,5 @@
 using System;
+using Lucky.Extensions;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -27,7 +28,7 @@ namespace Buildings
         private void Update()
         {
             if (fromBuilding)
-                moveSpeed = fromBuilding.soldierMoveSpeed;
+                moveSpeed = fromBuilding.SoldierMoveSpeed;
             transform.position += (targetPos - transform.position).normalized * (moveSpeed * Time.deltaTime);
             if (targetBuilding == null)
             {
@@ -41,11 +42,8 @@ namespace Buildings
                 Destroy(gameObject);
                 targetBuilding.ComingSoldiers -= 1;
             }
-        }
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.GetComponent<Building>() == targetBuilding)
+            if (this.Dist(targetBuilding) < 40)
             {
                 Destroy(gameObject);
                 targetBuilding.CurrentSoldiers += 1;

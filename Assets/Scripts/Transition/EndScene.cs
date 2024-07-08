@@ -13,8 +13,4 @@ public class EndScene : MonoBehaviour
     {
         canvasGroup.DOFade(1, 2);
     }
-
-    private void Update()
-    {
-    }
 }

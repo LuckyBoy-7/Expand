@@ -12,32 +12,9 @@ namespace Lucky.Interactive
     /// <summary>
     /// 注意先把相机大小放大100倍
     /// </summary>
-    public class GameCursor : MonoBehaviour
+    public class GameCursor : Singleton<GameCursor>
     {
-        public static GameCursor instance;
-
-        // 如果别人急需使用，那就直接去找，不然就在awake里初始化
-        public static GameCursor Instance
-        {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<GameCursor>();
-                    DontDestroyOnLoad(instance);
-                }
-
-                return instance;
-            }
-        }
-
-        private void Awake()
-        {
-            if (instance != null && instance != this)
-                Destroy(gameObject);
-        }
-
-        public HashSet<InteractableScreenUI> InteractableScreenUIs = new();
+        public HashSet<InteractableUIBase> interactableUIs = new();
         public static Vector2 MouseWorldPos => Camera.main.ScreenToWorldPoint(MouseScreenPos);
         public static Vector2 MouseWorldCellPos => new(Mathf.Floor(MouseWorldPos.x + 0.5f), Mathf.Floor(MouseWorldPos.y + 0.5f));
         public static Vector2 MouseScreenPos => Input.mousePosition;
@@ -60,22 +37,25 @@ namespace Lucky.Interactive
             if (PreviousMouseWorldPosition == default)
                 PreviousMouseWorldPosition = MouseWorldPos;
 
-            if (CurrentInteractable != PreviousInteractable)
-                PreviousInteractable?.CursorExit();
-            if (CurrentInteractable != PreviousInteractable)
-                CurrentInteractable?.CursorEnter();
-            CurrentInteractable?.CursorHover();
+            if (CurrentInteractable != PreviousInteractable && PreviousInteractable != null)
+                PreviousInteractable.CursorExit();
+            if (CurrentInteractable != PreviousInteractable && CurrentInteractable != null)
+                CurrentInteractable.CursorEnter();
+            if (CurrentInteractable != null)
+                CurrentInteractable.CursorHover();
             if (Input.GetMouseButtonDown(0))
             {
                 MouseButtonDownTimestamp = Time.realtimeSinceStartup;
                 MouseButtonDownInteractable = CurrentInteractable;
-                CurrentInteractable?.CursorPress();
+                if (CurrentInteractable)
+                    CurrentInteractable.CursorPress();
             }
 
             if (Input.GetMouseButton(0))
             {
                 Vector2 delta = MouseWorldPos - PreviousMouseWorldPosition;
-                MouseButtonDownInteractable?.CursorDrag(delta);
+                if (MouseButtonDownInteractable != null)
+                    MouseButtonDownInteractable.CursorDrag(delta);
 
                 // longPress
                 if (delta.magnitude > longPressOffsetTolerance)
@@ -83,7 +63,8 @@ namespace Lucky.Interactive
                 if (RealtimeSinceMouseButtonDown >= longPressTimeThreshold && !IsLongPressShake)
                 {
                     IsLongPressShake = true;
-                    MouseButtonDownInteractable?.CursorLongPress();
+                    if (MouseButtonDownInteractable != null)
+                        MouseButtonDownInteractable.CursorLongPress();
                 }
 
                 // wipe
@@ -101,13 +82,15 @@ namespace Lucky.Interactive
             if (Input.GetMouseButtonUp(0))
             {
                 IsLongPressShake = false;
-                if (RealtimeSinceMouseButtonDown <= clickTimeThreshold)
-                    MouseButtonDownInteractable?.CursorClick();
                 if (MouseButtonDownInteractable != null)
+                {
+                    if (RealtimeSinceMouseButtonDown <= clickTimeThreshold)
+                        MouseButtonDownInteractable.CursorClick();
                     MouseButtonDownInteractable.CursorRelease();
+                    if (MouseButtonDownInteractable.IsPositionInBounds(MouseWorldPos))
+                        MouseButtonDownInteractable.CursorReleaseInBounds();
+                }
 
-                if (MouseButtonDownInteractable != null && MouseButtonDownInteractable.PositionInBounds(MouseWorldPos))
-                    MouseButtonDownInteractable?.CursorReleaseInBounds();
                 MouseButtonDownInteractable = null;
             }
 
@@ -126,9 +109,9 @@ namespace Lucky.Interactive
                     hitInteractables.Add(component);
             }
 
-            foreach (InteractableScreenUI ui in InteractableScreenUIs)
+            foreach (InteractableUIBase ui in interactableUIs)
             {
-                if (ui.PositionInBounds(MouseScreenPos))
+                if (ui.IsPositionInBounds(ui.BoundsCheckPos))
                     hitInteractables.Add(ui);
             }
 
@@ -144,5 +127,7 @@ namespace Lucky.Interactive
             PreviousInteractable = CurrentInteractable;
             CurrentInteractable = topInteractable;
         }
+
+        public bool IsPointerOverInteractable() => CurrentInteractable != null;
     }
 }

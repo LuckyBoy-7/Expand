@@ -3,13 +3,57 @@ using UnityEngine;
 
 namespace Lucky.Interactive
 {
-    public class InteractableBase : MonoBehaviour
+    public abstract class InteractableBase : MonoBehaviour
     {
-        public new Collider2D collider;
-        public virtual long SortingOrder => 0;
+        public enum SortingLayerType
+        {
+            Default,
+            WorldUI,
+            Screen
+        }
+
+        protected abstract SortingLayerType sortingLayerType { get; }
+
+        protected long OffsetSortingLayer
+        {
+            get
+            {
+                return sortingLayerType switch
+                {
+                    SortingLayerType.Default => 0,
+                    SortingLayerType.WorldUI => 1000,
+                    SortingLayerType.Screen => 2000,
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+            }
+        }
+
+        protected abstract long SortingOrder { get; }
 
         public virtual int CompareSortingOrder(InteractableBase other) => (int)Mathf.Sign(SortingOrder - other.SortingOrder);
 
+
+        // 由EnemyManager调用以判断当前鼠标位置是否在敌人范围内
+        // 这样在Drag Card的时候就知道要不要显示Selection Box了
+        public abstract bool IsPositionInBounds(Vector2 pos, RectTransform trans = null);
+
+        // 判断enter和exit bounds所用的位置
+        public abstract Vector2 BoundsCheckPos { get; }
+
+
+        private bool preInBounds = false;
+
+        protected virtual void Update()
+        {
+            bool curInBounds = IsPositionInBounds(BoundsCheckPos);
+            if (curInBounds && !preInBounds)
+                CursorEnterBounds();
+            else if (!curInBounds && preInBounds)
+                CursorExitBounds();
+            preInBounds = curInBounds;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////
         // 这些是可以给外部用的给
         public event Action OnCursorEnterEvent; // 鼠标进入时
         public event Action OnCursorExitEvent; // 鼠标离开时
@@ -26,34 +70,6 @@ namespace Lucky.Interactive
         public float WipeDistanceAccumulator { get; set; } // 因为wipe这个状态其实不是很好定义，如果wipe的多个对象都不知道要作用于哪一个，所以还是写在基类里，wipeDistance量到了就调用
         private bool debug = false;
         public bool canInteract = true;
-
-        // 由EnemyManager调用以判断当前鼠标位置是否在敌人范围内
-        // 这样在Drag Card的时候就知道要不要显示Selection Box了
-        public virtual bool PositionInBounds(Vector2 pos, RectTransform trans = null) => collider.OverlapPoint(pos);
-
-        // 判断enter和exit bounds所用的位置
-        protected virtual Vector2 BoundsCheckPos => GameCursor.MouseWorldPos;
-
-        protected virtual void Awake()
-        {
-            if (collider == null)
-                collider = GetComponent<Collider2D>();
-            if (collider == null)
-                collider = gameObject.AddComponent<BoxCollider2D>();
-        }
-
-        private bool preInBoudns = false;
-
-        protected virtual void Update()
-        {
-            // 这里默认用鼠标位置
-            bool curInBounds = PositionInBounds(BoundsCheckPos);
-            if (curInBounds && !preInBoudns)
-                CursorEnterBounds();
-            else if (!curInBounds && preInBoudns)
-                CursorExitBounds();
-            preInBoudns = curInBounds;
-        }
 
         public void CursorEnter()
         {

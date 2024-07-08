@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Events
 {
-    public class Event
+    public abstract class Event
     {
         public string name;
         public string description;
@@ -19,26 +19,51 @@ namespace Events
         public EventType eventType;
         public float radius;
         public Color color;
+        public float duration;
 
         protected List<Building> GetBuildingsInRadius(Vector3 pos, float radius)
         {
             return BuildingsManager.instance.buildings.Where(b => (b.transform.position - pos).magnitude < radius).ToList();
         }
+
+        public abstract void Do(EventItem item);
+
+        public abstract void Undo(EventItem item);
     }
 
     public class AttackEvent : Event
     {
         public int enemyNumber;
+
+        public override void Do(EventItem item)
+        {
+            for (int i = 0; i < enemyNumber; i++)
+            {
+                var enemy = EnemiesManager.instance.enemyPool.Get();
+                enemy.gameObject.SetActive(true);
+                enemy.InitPos(item.targetBuilding.transform.position);
+                enemy.targetBuilding = item.targetBuilding;
+            }
+
+            EventManager.instance.buildingsWithEvent.Remove(item.targetBuilding);
+        }
+
+        public override void Undo(EventItem item)
+        {
+        }
     }
 
-    public abstract class DebuffEvent : Event
+    public class DebuffEvent : Event
     {
         public List<Building> affectedBuildings = new();
-        public float duration;
 
-        public abstract void Do(EventItem item);
+        public override void Do(EventItem item)
+        {
+        }
 
-        public abstract void Undo(EventItem item);
+        public override void Undo(EventItem item)
+        {
+        }
     }
 
 
@@ -51,6 +76,13 @@ namespace Events
             eventType = EventType.Dot;
             color = Color.gray;
             enemyNumber = Random.Range(5, 9);
+        }
+
+        public override void Do(EventItem item)
+        {
+            base.Do(item);
+            if (Random.value < 0.3f)
+                EventManager.instance.CallStrongBanditEvent();
         }
     }
 

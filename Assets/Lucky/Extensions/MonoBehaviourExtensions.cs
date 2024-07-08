@@ -76,5 +76,7 @@ namespace Lucky.Extensions
                 callback?.Invoke();
             }
         }
+
+        public static float Dist(this MonoBehaviour orig, MonoBehaviour other) => (orig.transform.position - other.transform.position).magnitude;
     }
 }

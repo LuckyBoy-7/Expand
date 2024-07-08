@@ -11,7 +11,6 @@ namespace Camera_
 
         private void Update()
         {
-            
             var camera = Camera.main;
             camera.orthographicSize = Mathf.Clamp(camera.orthographicSize - Input.mouseScrollDelta.y * delta, minSize, maxSize);
         }

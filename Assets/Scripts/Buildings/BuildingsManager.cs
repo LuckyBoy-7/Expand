@@ -5,6 +5,7 @@ using Buildings;
 using DG.Tweening;
 using Lucky.Extensions;
 using Lucky.Managers;
+using Lucky.Loader;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,50 +29,78 @@ public class BuildingsManager : Singleton<BuildingsManager>
     protected override void Awake()
     {
         base.Awake();
+
+
         buildingsToSpawn = new List<Building>
         {
-            Resources.Load<Building>("Prefabs/CircleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
-            Resources.Load<Building>("Prefabs/TriangleBuilding"),
+            Res.circleBuildingPrefab,
+            Res.triangleBuildingPrefab,
+            Res.triangleBuildingPrefab,
+            Res.triangleBuildingPrefab,
+            Res.triangleBuildingPrefab,
+            Res.triangleBuildingPrefab,
         };
     }
 
     private void Start()
     {
-        InvokeRepeating(nameof(SpawnOneBuildingRandomly), spawnBuildingDuration, spawnBuildingDuration);
+        SpawnBuilding(Res.circleBuildingPrefab, Vector3.zero).CurrentSoldiers = 2;
+        SpawnBuilding(Res.triangleBuildingPrefab);
+        SpawnBuilding(Res.triangleBuildingPrefab);
+        this.CreateFuncTimer(SpawnOneBuildingRandomly, () => spawnBuildingDuration);
     }
 
     private void SpawnOneBuildingRandomly()
     {
-        if (buildings.Count == 0)
+        // 抽位置
+        if (!TryGetValidPosToSpawnBuilding(out var possiblePos))
             return;
+
+        // 抽建筑
+        Building buildingPrefab = buildingsToSpawn.Choice();
+        SpawnBuilding(buildingPrefab, possiblePos);
+    }
+
+    private bool TryGetValidPosToSpawnBuilding(out Vector3 possiblePos)
+    {
+        possiblePos = Vector3.zero;
+
+        if (buildings.Count == 0)
+            return false;
         float rate = Ease.SineEaseOut(Mathf.Clamp(buildings.Count / 50f, 0, 1));
         float radius = minBuildingDist + rate * maxBuildingDist;
 
         // 如果buildings长度为零理论上就是直接结束了，所以应该问题不大
         Building pivotBuilding = buildings.Choice();
-        Vector3 possiblePos = pivotBuilding.transform.position + (Vector3)Random.insideUnitCircle * radius;
+        Vector3 pos = pivotBuilding.transform.position + (Vector3)Random.insideUnitCircle * radius;
         int tryCount = 0;
-        while (buildings.Any(build => (build.transform.position - possiblePos).magnitude < minBuildingDist))
+        while (buildings.Any(build => (build.transform.position - pos).magnitude < minBuildingDist))
         {
-            possiblePos = pivotBuilding.transform.position + (Vector3)Random.insideUnitCircle * radius;
+            pos = pivotBuilding.transform.position + (Vector3)Random.insideUnitCircle * radius;
             if (tryCount++ > maxBuildingDist) // 这都随机不出来，就退出
-                return;
+                return false;
         }
 
-        Building buildingPrefab = buildingsToSpawn.Choice();
-        Instantiate(buildingPrefab, buildingContainer).transform.position = possiblePos;
+        possiblePos = pos;
+        return true;
     }
 
-    public void SpawnBuilding(Building prefab, Vector3 pos)
+    public Building SpawnBuilding(Building prefab, Vector3 pos)
     {
-        Instantiate(prefab, pos, quaternion.identity, buildingContainer);
+        Building building = Instantiate(prefab, buildingContainer);
+        building.transform.position = pos;
+        buildings.Add(building);
+        return building;
     }
 
-    public void Register(Building building) => buildings.Add(building);
+    public Building SpawnBuilding(Building prefab)
+    {
+        // 抽位置
+        if (!TryGetValidPosToSpawnBuilding(out var possiblePos))
+            return null;
+        return SpawnBuilding(prefab, possiblePos);
+    }
+
     public void UnRegister(Building building) => buildings.Remove(building);
 
     public void OnBuildingSelected(Building building)
@@ -97,7 +126,7 @@ public class BuildingsManager : Singleton<BuildingsManager>
 
     public void CheckGameState()
     {
-        if (buildings.Count == 0)
+        if (buildings.Count == 0 || buildings.All(b => b.possibleSoldiers == 0))
         {
             float duration = 1f;
             EventManager.instance.Broadcast("Gameover", duration);
